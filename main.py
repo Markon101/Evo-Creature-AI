@@ -294,7 +294,9 @@ class DQNAgent:
             with torch.no_grad(): # No need to track gradients for action selection
                 state_tensor = torch.tensor(state, dtype=torch.float32).unsqueeze(0)
                 q_values = self.q_network(state_tensor)
-                return torch.argmax(q_values).item()  # Exploit
+                # Get the action index correctly
+                action = torch.argmax(q_values).item()  
+                return action  # Exploit
 
     def train(self):
         """
