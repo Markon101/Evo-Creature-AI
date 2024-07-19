@@ -310,7 +310,7 @@ class DQNAgent:
         states = torch.tensor(states, dtype=torch.float32).view(self.batch_size, -1)
         actions = torch.tensor(actions, dtype=torch.int64).unsqueeze(1)
         rewards = torch.tensor(rewards, dtype=torch.float32).unsqueeze(1)
-        next_states = torch.tensor(next_states, dtype=torch.float32).view(self.batch_size, -1)
+        next_states = torch.tensor(next_states, dtype=torch.float32).view(self.batch_size, -1) # Reshaped here
         dones = torch.tensor(dones, dtype=torch.bool).unsqueeze(1)
 
         # Q-Network Predictions
