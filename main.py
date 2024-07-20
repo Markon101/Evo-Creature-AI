@@ -170,17 +170,34 @@ class Creature:
 
         self.apply_physics()
 
+    def update_joints(self):
+        """
+        Enforces joint angle limits.
+        """
+        for joint in self.joints:
+            joint.bone1.angle = max(joint.angle_limit[0], min(joint.angle_limit[1], joint.bone1.angle))
+            joint.bone1.update()  # Update bone position after enforcing angle limit
+
     def apply_physics(self):
         """
-        Applies basic physics (gravity and ground collision) to the creature.
+        Applies physics (gravity and ground collision) to the creature.
         """
+        # 1. Gravity:
         for bone in self.bones:
-            bone.start_pos = (bone.start_pos[0], bone.start_pos[1] + 0.2)  # Gravity
-            bone.update()
+            bone.start_pos = (bone.start_pos[0], bone.start_pos[1] + 0.2) 
 
-            if bone.start_pos[1] > GROUND_Y:
-                bone.start_pos = (bone.start_pos[0], GROUND_Y)
-            bone.update()
+        # 2. Ground Collision and Reaction Force:
+        for joint in self.joints:
+            # Check if either bone in the joint is below the ground
+            if joint.bone1.start_pos[1] > GROUND_Y or joint.bone2.start_pos[1] > GROUND_Y:
+                # Calculate a reaction force based on the amount of penetration (optional)
+                reaction_force = 0.2
+                # Apply reaction force upwards to the joint's start position (bone1)
+                joint.bone1.start_pos = (joint.bone1.start_pos[0], joint.bone1.start_pos[1] - reaction_force) 
+                joint.bone1.update()
+
+        # 3. Joint Constraint:
+        self.update_joints()
 
     def draw(self, screen):
         """
@@ -312,7 +329,7 @@ class DQNAgent:
         states = torch.tensor(states, dtype=torch.float32).view(self.batch_size, -1)
         actions = torch.tensor(actions, dtype=torch.int64).unsqueeze(1)
         rewards = torch.tensor(rewards, dtype=torch.float32).unsqueeze(1)
-        next_states = torch.tensor(next_states, dtype=torch.float32).view(self.batch_size, -1) # Reshaped here
+        next_states = torch.tensor(next_states, dtype=torch.float32).view(self.batch_size, -1)
         dones = torch.tensor(dones, dtype=torch.bool).unsqueeze(1)
 
         # Q-Network Predictions
@@ -320,7 +337,7 @@ class DQNAgent:
 
         # Target Network Calculations
         with torch.no_grad():
-            next_q_values = self.target_network(next_states).max(1, keepdim=True)[0]
+            next_q_values = self.target_network(next_states).max(1, keepdim=True) # keepdim=True to preserve shape
             target_q_values = rewards + (self.gamma * next_q_values * (~dones).float()) 
 
         # Loss Calculation and Optimization 
@@ -332,12 +349,6 @@ class DQNAgent:
         # Decrease exploration rate
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
-
-    def update_target_network(self):
-        """
-        Updates the target network with the weights of the Q-network (done periodically).
-        """
-        self.target_network.load_state_dict(self.q_network.state_dict())
 
 # --- Environment ---
 class Environment:
