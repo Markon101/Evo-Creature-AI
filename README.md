@@ -54,7 +54,7 @@ Compatibility: Windows 10+, macOS 10.14+, Linux (major distributions)
 Run the main script to start the game:
 
 ```
-python main-py.py
+python main.py
 ```
 
 - Use the mouse to design your creature in the design mode.
