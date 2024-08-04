@@ -1,6 +1,6 @@
 # Evo-Creature-AI
 
-Evo-Creature-AI is an open-source game that aims to provide an experience similar to the excellent Evolution.io, but with a modern twist. It incorporates cutting-edge machine learning and deep learning algorithms, including batched parallel background training and experimental KAN (Knowledge-Augmented Neural) models.
+Evo-Creature-AI is an open-source game that reimagines the concept of Evolution.io with modern machine learning techniques. It offers a unique platform for designing and evolving 2D creatures in a physics-based environment, powered by cutting-edge AI algorithms.
 
 ## Table of Contents
 
@@ -9,7 +9,10 @@ Evo-Creature-AI is an open-source game that aims to provide an experience simila
 - [Installation](#installation)
 - [Usage](#usage)
 - [Technical Details](#technical-details)
+- [AI Techniques](#ai-techniques)
+- [Roadmap](#roadmap)
 - [Contributing](#contributing)
+- [Reporting Issues](#reporting-issues)
 - [License](#license)
 
 ## Overview
@@ -18,8 +21,8 @@ Evo-Creature-AI allows players to design simple 2D creatures with animated bones
 
 ## Features
 
-- Interactive creature designer
-- Physics-based 2D environment
+- Interactive creature designer with intuitive bone and muscle creation
+- Physics-based 2D environment with customizable terrains
 - Deep Q-Learning Network (DQN) for creature behavior learning
 - Multiple challenge environments (running, rough terrain navigation, etc.)
 - Batched parallel background training for improved performance
@@ -38,6 +41,14 @@ Evo-Creature-AI allows players to design simple 2D creatures with animated bones
    pip install pygame torch numpy
    ```
 
+### System Requirements
+
+- Python 3.11+
+- 4GB RAM (8GB recommended for larger simulations)
+- Graphics card with OpenGL 3.3+ support
+
+Compatibility: Windows 10+, macOS 10.14+, Linux (major distributions)
+
 ## Usage
 
 Run the main script to start the game:
@@ -47,6 +58,8 @@ python main-py.py
 ```
 
 - Use the mouse to design your creature in the design mode.
+- Left-click and drag to create bones.
+- Right-click to select bones and create joints.
 - Press the spacebar to switch between design and simulation modes.
 - In simulation mode, watch your creature learn and evolve!
 
@@ -67,6 +80,24 @@ The project structure includes:
 - `environment.py`: Simulation environment and terrain generation
 - `ai_agent.py`: Implementation of the DQN agent
 
+## AI Techniques
+
+Evo-Creature-AI employs several advanced AI techniques:
+
+1. Deep Q-Learning Network (DQN): Used for decision-making in creature behavior.
+2. Experience Replay: Improves learning stability and efficiency.
+3. Batched Parallel Training: Allows for faster learning across multiple instances.
+4. Knowledge-Augmented Neural (KAN) Models: (Upcoming) Will incorporate domain knowledge into the learning process.
+
+## Roadmap
+
+- Implement advanced terrain generation algorithms
+- Add more complex challenges and environments
+- Introduce creature species and inter-species competition
+- Develop a web-based version for easier access
+- Integrate more sophisticated evolutionary algorithms
+- **Actually work (Claude got ahead of itself there but I think this is a fun roadmap)**
+
 ## Contributing
 
 We welcome contributions to Evo-Creature-AI! If you have suggestions for improvements or bug fixes, please follow these steps:
@@ -79,9 +110,18 @@ We welcome contributions to Evo-Creature-AI! If you have suggestions for improve
 
 Please ensure your code adheres to the project's coding standards and include tests for new features.
 
+## Reporting Issues
+
+If you encounter any bugs or have feature requests, please open an issue on our GitHub repository. When reporting issues, please include:
+
+- A clear and descriptive title
+- A detailed description of the issue or feature request
+- Steps to reproduce the issue (for bugs)
+- Your environment details (OS, Python version, etc.)
+
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
 ---
 
