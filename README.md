@@ -231,7 +231,7 @@ Contributions are welcome! If you'd like to improve EvoGame, please follow these
 
 ## License
 
-Distributed under the [MIT License](LICENSE).
+Distributed under the Apache 2 License
 
 ## Acknowledgments
 
