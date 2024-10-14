@@ -1,4 +1,3 @@
-```markdown
 # EvoGame: Evolutionary Creature Simulation
 
 ![EvoGame Banner](https://your-image-link.com/banner.png)
