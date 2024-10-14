@@ -1,128 +1,240 @@
-# Evo-Creature-AI
+```markdown
+# EvoGame: Evolutionary Creature Simulation
 
-Evo-Creature-AI is an open-source game that reimagines the concept of Evolution.io with modern machine learning techniques. It offers a unique platform for designing and evolving 2D creatures in a physics-based environment, powered by cutting-edge AI algorithms.
+![EvoGame Banner](https://your-image-link.com/banner.png)
+
+EvoGame is an innovative simulation game that combines evolutionary algorithms with artificial intelligence to create, train, and evolve intelligent creatures. Users can design creatures with customizable bones, joints, and muscles, and watch as AI agents learn to navigate dynamically generated terrains. Whether you're a developer, researcher, or enthusiast, EvoGame offers a unique platform to explore the fascinating interplay between biology-inspired design and machine learning.
 
 ## Table of Contents
 
-- [Overview](#overview)
 - [Features](#features)
+- [Demo](#demo)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Technical Details](#technical-details)
-- [AI Techniques](#ai-techniques)
-- [Roadmap](#roadmap)
+- [Controls](#controls)
+- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
-- [Reporting Issues](#reporting-issues)
 - [License](#license)
-
-## Overview
-
-Evo-Creature-AI allows players to design simple 2D creatures with animated bones, muscles, and joints on a grid. These creatures are then dropped into a game world as agents, learning to tackle various challenges such as running, navigating rough terrain, or achieving specific goals. The game utilizes modern ML/DL algorithms to evolve and optimize creature behavior over time.
+- [Acknowledgments](#acknowledgments)
 
 ## Features
 
-- Interactive creature designer with intuitive bone and muscle creation
-- Physics-based 2D environment with customizable terrains
-- Deep Q-Learning Network (DQN) for creature behavior learning
-- Multiple challenge environments (running, rough terrain navigation, etc.)
-- Batched parallel background training for improved performance
-- Experimental KAN (Knowledge-Augmented Neural) models integration (coming soon)
+- **Creature Designer:** Intuitive interface to create and customize creatures by adding bones, joints, and muscles.
+- **Dynamic Terrain Generation:** Automatically generates varied terrains (flat, random, hilly) for creatures to navigate.
+- **AI Integration:** Utilizes Deep Q-Networks (DQN) for training AI agents to control creature movements.
+- **User Interface Controls:** Easy-to-use buttons for resetting simulations, initiating training, pausing, and managing AI models.
+- **Model Persistence:** Save and load trained AI models to continue training or for inference in future sessions.
+- **Visual Feedback:** Real-time visualization of creature structures, joint connections, muscle activations, and training metrics.
+- **Performance Optimization:** Efficient rendering and physics calculations to ensure smooth simulation experiences.
+
+## Demo
+
+![EvoGame Demo](https://your-image-link.com/demo.gif)
+
+*Watch as a creature navigates through a randomly generated terrain, controlled by an AI agent.*
 
 ## Installation
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/Evo-Creature-AI.git
-   cd Evo-Creature-AI
-   ```
+### Prerequisites
 
-2. Install the required dependencies:
-   ```
-   pip install pygame torch numpy
-   ```
+- **Python 3.11** or higher
+- **Pip** package manager
 
-### System Requirements
+### Clone the Repository
 
-- Python 3.11+
-- 4GB RAM (8GB recommended for larger simulations)
-- Graphics card with OpenGL 3.3+ support
+```bash
+git clone https://github.com/yourusername/evogame.git
+cd evogame
+```
 
-Compatibility: Windows 10+, macOS 10.14+, Linux (major distributions)
+### Create a Virtual Environment (Optional but Recommended)
+
+```bash
+python -m venv evocreature
+source evocreature/bin/activate  # On Windows: evocreature\Scripts\activate
+```
+
+### Install Dependencies
+
+Ensure you have `pip` updated:
+
+```bash
+pip install --upgrade pip
+```
+
+Install required packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+**`requirements.txt`**
+
+```plaintext
+pygame==2.6.1
+torch==2.0.1
+numpy==1.25.0
+```
+
+*Note: Ensure that your system meets the requirements for PyTorch. Visit [PyTorch Installation](https://pytorch.org/get-started/locally/) for more details.*
 
 ## Usage
 
-Run the main script to start the game:
+### Running the Simulation
 
-```
+Start the EvoGame simulation by executing the `main.py` script:
+
+```bash
 python main.py
 ```
 
-- Use the mouse to design your creature in the design mode.
-- Left-click and drag to create bones.
-- Right-click to select bones and create joints.
-- Press the spacebar to switch between design and simulation modes.
-- In simulation mode, watch your creature learn and evolve!
+### Creature Design Mode
 
-## Technical Details
+1. **Adding Bones:**
+   - **Left Click:** Click and drag on the grid to create bones. Ensure that the start and end points are distinct to avoid zero-length bones.
+   
+2. **Selecting Bones:**
+   - **Right Click:** Click near a bone to select it. Selected bones are highlighted in yellow.
 
-Evo-Creature-AI is built using:
+3. **Connecting Bones:**
+   - After selecting a bone, create a new bone to automatically connect it via a joint and muscle.
 
-- Python 3.11+
-- Pygame for graphics and user interface
-- PyTorch for neural network implementation
-- Custom physics engine for 2D creature simulation
+### Simulation Mode
 
-The project structure includes:
+1. **Switching Modes:**
+   - **Press `SPACE`:** Toggle between Design and Simulation modes.
 
-- `main-py.py`: Main game loop and mode switching
-- `creature_designer.py`: Interface for designing creatures
-- `creature.py`: Classes for Creature, Bone, Joint, and Muscle
-- `environment.py`: Simulation environment and terrain generation
-- `ai_agent.py`: Implementation of the DQN agent
+2. **Training AI Agents:**
+   - **Click "Train" Button:** Initiate the training process where AI agents learn to control the creatures.
+   - **Monitor Epsilon:** Observe the exploration rate of the AI agent displayed on the screen.
 
-## AI Techniques
+3. **Controls:**
+   - **Reset Simulation:** Click the "Reset" button to restart the simulation environment.
+   - **Pause/Resume Simulation:** Click the "Pause" button to toggle between pausing and resuming the simulation.
+   - **Save Model:** Click the "Save Model" button to persist the current AI model.
+   - **Load Model:** Click the "Load Model" button to load a previously saved AI model.
 
-Evo-Creature-AI employs several advanced AI techniques:
+## Controls
 
-1. Deep Q-Learning Network (DQN): Used for decision-making in creature behavior.
-2. Experience Replay: Improves learning stability and efficiency.
-3. Batched Parallel Training: Allows for faster learning across multiple instances.
-4. Knowledge-Augmented Neural (KAN) Models: (Upcoming) Will incorporate domain knowledge into the learning process.
+| Action                | Description                                        |
+|-----------------------|----------------------------------------------------|
+| **Left Click**        | Start drawing a bone by clicking and dragging.     |
+| **Right Click**       | Select a bone to connect with a new bone.          |
+| **Press `SPACE`**     | Toggle between Design and Simulation modes.        |
+| **Click "Reset"**     | Reset the simulation environment.                  |
+| **Click "Train"**     | Start training the AI agent.                       |
+| **Click "Pause"**     | Pause or resume the simulation.                    |
+| **Click "Save Model"**| Save the current AI model to disk.                  |
+| **Click "Load Model"**| Load a saved AI model from disk.                    |
+| **Press `R`**         | Reset the simulation during Simulation mode.       |
 
-## Roadmap
+## Troubleshooting
 
-- Implement advanced terrain generation algorithms
-- Add more complex challenges and environments
-- Introduce creature species and inter-species competition
-- Develop a web-based version for easier access
-- Integrate more sophisticated evolutionary algorithms
-- **Actually work (Claude got ahead of itself there but I think this is a fun roadmap)**
+### Common Errors
+
+1. **Cannot Create a Bone of Length 0**
+
+   ```
+   Cannot create a bone of length 0.
+   ```
+
+   **Cause:** Attempting to create a bone where the start and end positions are identical.
+
+   **Solution:**
+   - Ensure that when designing creatures, bones have distinct start and end points.
+   - Adjust the grid size if necessary to reduce the likelihood of zero-length bones.
+
+2. **TypeError: center argument must be a pair of numbers**
+
+   ```
+   TypeError: center argument must be a pair of numbers
+   ```
+
+   **Cause:** Passing invalid coordinates to `pygame.draw.circle`.
+
+   **Solution:**
+   - Verify that joints are connected between valid bones with numerical coordinates.
+   - Ensure that bones are correctly initialized with positive lengths.
+
+3. **RuntimeError: Size Mismatch in Neural Network**
+
+   ```
+   RuntimeError: Error(s) in loading state_dict for NeuralNetwork:
+           size mismatch for layer1.weight: copying a param with shape torch.Size([24, 10]) from checkpoint, the shape in current model is torch.Size([24, 13]).
+   ```
+
+   **Cause:** The architecture of the current `NeuralNetwork` model differs from the one used when saving `dqn_model.pth`.
+
+   **Solution:**
+   - **Option 1:** Delete the existing `dqn_model.pth` file to allow the creation of a new model matching the current architecture.
+     ```bash
+     rm dqn_model.pth
+     ```
+   - **Option 2:** Ensure that the model architecture remains consistent between training sessions.
+
+4. **Pygame AVX2 Warning**
+
+   ```
+   RuntimeWarning: Your system is avx2 capable but pygame was not built with support for it...
+   ```
+
+   **Cause:** Pygame was not compiled with AVX2 optimizations.
+
+   **Solution:**
+   - **Option 1:** Rebuild Pygame from source with AVX2 support.
+   - **Option 2:** Ignore the warning if performance is acceptable.
+
+### Additional Tips
+
+- **Virtual Environment:** Use a virtual environment to manage dependencies and prevent conflicts.
+- **Dependencies:** Ensure all dependencies listed in `requirements.txt` are installed correctly.
+- **Model Saving:** Regularly save your AI models to prevent loss of training progress.
 
 ## Contributing
 
-We welcome contributions to Evo-Creature-AI! If you have suggestions for improvements or bug fixes, please follow these steps:
+Contributions are welcome! If you'd like to improve EvoGame, please follow these steps:
 
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature-branch`)
-3. Make your changes and commit them (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin feature-branch`)
-5. Create a new Pull Request
+1. **Fork the Repository:**
+   - Click the "Fork" button at the top-right corner of the repository page.
 
-Please ensure your code adheres to the project's coding standards and include tests for new features.
+2. **Clone Your Fork:**
+   ```bash
+   git clone https://github.com/yourusername/evogame.git
+   cd evogame
+   ```
 
-## Reporting Issues
+3. **Create a New Branch:**
+   ```bash
+   git checkout -b feature/YourFeatureName
+   ```
 
-If you encounter any bugs or have feature requests, please open an issue on our GitHub repository. When reporting issues, please include:
+4. **Make Changes and Commit:**
+   ```bash
+   git add .
+   git commit -m "Add feature: YourFeatureName"
+   ```
 
-- A clear and descriptive title
-- A detailed description of the issue or feature request
-- Steps to reproduce the issue (for bugs)
-- Your environment details (OS, Python version, etc.)
+5. **Push to Your Fork:**
+   ```bash
+   git push origin feature/YourFeatureName
+   ```
+
+6. **Submit a Pull Request:**
+   - Navigate to your fork on GitHub and click "New Pull Request".
+
+### Guidelines
+
+- **Code Quality:** Ensure your code follows Python best practices and is well-documented.
+- **Testing:** Include tests for new features and ensure existing tests pass.
+- **Commit Messages:** Write clear and descriptive commit messages.
+- **Issue Reporting:** If you encounter bugs or have feature requests, please open an issue.
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+Distributed under the [MIT License](LICENSE).
 
----
+## Acknowledgments
 
-Evo-Creature-AI is a work in progress. We're excited to see how it evolves with community contributions and new AI techniques!
+- **[Pygame](https://www.pygame.org/news)** - For providing a robust library for game development.
+- **[PyTorch](https://pytorch.org/)** - For enabling powerful machine learning capabilities.
+- **Inspiration Sources:** Thanks to the open-source community for inspiring tools and frameworks that made this project possible.
