@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+from creature import Creature
 
 class Environment:
     def __init__(self, width, height, ground_y):
@@ -8,32 +9,58 @@ class Environment:
         self.height = height
         self.ground_y = ground_y
         self.creatures = []
-        self.terrain = self.generate_flat_terrain()
+        self.generate_random_terrain()
         self.time_step = 0
         self.max_steps = 1000  # Maximum steps per episode
 
     def generate_flat_terrain(self):
-        return [(0, self.ground_y), (self.width, self.ground_y)]
+        self.terrain = [(0, self.ground_y), (self.width, self.ground_y)]
 
     def generate_random_terrain(self):
         terrain = [(0, self.ground_y)]
         x = 0
         while x < self.width:
-            x += random.randint(50, 150)
-            y = self.ground_y + random.randint(-50, 50)
+            remaining_width = self.width - x
+            if remaining_width < 50:
+                # If the remaining width is less than the minimum step size, append the end point and break
+                terrain.append((self.width, self.ground_y))
+                break
+            max_step = min(150, remaining_width)
+            step = random.randint(50, max_step)
+            x += step
+            y_variation = random.randint(-50, 50)
+            y = self.ground_y + y_variation
+            y = max(0, min(self.height, y))  # Ensure y stays within screen
             terrain.append((x, y))
-        return terrain
+        self.terrain = terrain
 
     def generate_hilly_terrain(self):
         terrain = [(0, self.ground_y)]
         x = 0
         while x < self.width:
-            x += random.randint(100, 200)
-            y = self.ground_y + random.randint(-100, 100)
+            remaining_width = self.width - x
+            if remaining_width < 100:
+                # If the remaining width is less than the minimum step size for hilly terrain, append the end point and break
+                terrain.append((self.width, self.ground_y))
+                break
+            max_step = min(200, remaining_width)
+            step = random.randint(100, max_step)
+            x += step
+            y_variation = random.randint(-100, 100)
+            y = self.ground_y + y_variation
+            y = max(0, min(self.height, y))
             terrain.append((x, y))
-        return terrain
+        self.terrain = terrain
 
     def add_creature(self, creature):
+        # Ensure the creature has muscles before adding
+        if len(creature.muscles) == 0:
+            if len(creature.bones) < 2:
+                bone1 = creature.add_bone((self.width // 2, self.ground_y), 50, 5)
+                bone2 = creature.add_bone((bone1.end_pos[0], bone1.end_pos[1]), 50, 5)
+                creature.add_muscle(bone1, bone2)
+        if len(creature.muscles) == 0:
+            raise ValueError("Creature must have at least one muscle before being added to the environment.")
         self.creatures.append(creature)
 
     def step(self, actions):
@@ -45,8 +72,9 @@ class Environment:
             creature.update(action)
 
             # Reward is based on distance traveled to the right, stability, and energy efficiency
-            reward = creature.x - creature.bones[0].start_pos[0]
-            creature.x = creature.bones[0].start_pos[0]
+            initial_x = creature.x
+            movement = creature.x - initial_x
+            reward = movement
 
             # Stability Reward: Penalize if the lowest point of the creature is too low
             lowest_point = max(bone.start_pos[1] for bone in creature.bones)
@@ -91,5 +119,5 @@ class Environment:
 
     def reset(self):
         self.creatures = []
-        self.terrain = self.generate_flat_terrain()  # You can also randomize terrain here
+        self.generate_random_terrain()  # Randomize terrain on reset
         self.time_step = 0

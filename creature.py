@@ -8,7 +8,7 @@ class Bone:
         self.thickness = thickness
         self.angle = angle
         self.mass = mass
-        self.velocity = [0.0, 0.0]  # Added velocity attribute
+        self.velocity = [0.0, 0.0]  # Velocity attribute
         self.end_pos = self.calculate_end_pos()
 
     def calculate_end_pos(self):
@@ -52,6 +52,15 @@ class Joint:
         self.bone2.start_pos[0] = self.bone1.end_pos[0] + self.bone2.length * math.cos(clamped_angle)
         self.bone2.start_pos[1] = self.bone1.end_pos[1] + self.bone2.length * math.sin(clamped_angle)
 
+    def draw(self, screen):
+        # Draw a visual representation of the joint
+        if isinstance(self.bone1.end_pos, (list, tuple)) and isinstance(self.bone2.start_pos, (list, tuple)):
+            try:
+                center = (int(self.bone1.end_pos[0]), int(self.bone1.end_pos[1]))
+                pygame.draw.circle(screen, (0, 255, 0), center, 5)
+            except (TypeError, ValueError):
+                print("Invalid joint coordinates:", self.bone1.end_pos, self.bone2.start_pos)
+
 class Muscle:
     def __init__(self, bone1, bone2, strength=1.0, damping=0.1):
         self.bone1 = bone1
@@ -77,6 +86,10 @@ class Muscle:
         self.bone1.apply_force(force)
         self.bone2.apply_force([-f for f in force])
 
+    def draw(self, screen):
+        # Draw a visual representation of the muscle
+        pygame.draw.line(screen, (255, 0, 0), self.bone1.start_pos, self.bone2.start_pos, 2)
+
 class Creature:
     def __init__(self, x, y):
         self.x = x
@@ -87,21 +100,36 @@ class Creature:
         self.alive = True
 
     def add_bone(self, start_pos, length, thickness, angle=0.0):
+        if length <= 0:
+            print("Cannot create a bone of length 0.")
+            return None
         bone = Bone(start_pos, length, thickness, angle)
         self.bones.append(bone)
         return bone
 
     def add_joint(self, bone1, bone2, angle_limit=(-math.pi / 4, math.pi / 4)):
-        joint = Joint(bone1, bone2, angle_limit)
-        self.joints.append(joint)
-        return joint
+        if bone1 and bone2:
+            joint = Joint(bone1, bone2, angle_limit)
+            self.joints.append(joint)
+            return joint
+        else:
+            print("Cannot create a joint without two valid bones.")
+            return None
 
     def add_muscle(self, bone1, bone2, strength=1.0, damping=0.1):
-        muscle = Muscle(bone1, bone2, strength, damping)
-        self.muscles.append(muscle)
-        return muscle
+        if bone1 and bone2:
+            muscle = Muscle(bone1, bone2, strength, damping)
+            self.muscles.append(muscle)
+            return muscle
+        else:
+            print("Cannot create a muscle without two valid bones.")
+            return None
 
     def update(self, actions):
+        if len(self.muscles) == 0:
+            raise ValueError("Creature must have at least one muscle to update.")
+        if len(actions) != len(self.muscles):
+            raise ValueError(f"Expected {len(self.muscles)} actions, but got {len(actions)} actions.")
         for muscle, action in zip(self.muscles, actions):
             muscle.contract(action)
         self.apply_physics()
@@ -112,10 +140,6 @@ class Creature:
             gravity_force = [0, 0.5 * bone.mass]
             bone.apply_force(gravity_force)
 
-        # Apply muscle forces
-        for muscle in self.muscles:
-            muscle.contract(muscle.activation)
-
         # Enforce joint constraints
         for joint in self.joints:
             joint.enforce_constraints()
@@ -125,8 +149,15 @@ class Creature:
             bone.update()
 
     def draw(self, screen):
+        # Draw all bones
         for bone in self.bones:
             bone.draw(screen)
+        # Draw all joints
+        for joint in self.joints:
+            joint.draw(screen)
+        # Draw all muscles
+        for muscle in self.muscles:
+            muscle.draw(screen)
 
     def get_state(self):
         # Return a list of all bone angles, positions, and muscle activations
